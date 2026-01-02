@@ -53,3 +53,9 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+#build files
+cmake-build-debug/
+
+#debug symbols on macOS
+*.dSYM/
