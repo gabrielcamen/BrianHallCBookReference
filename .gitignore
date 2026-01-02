@@ -67,5 +67,7 @@ cmake-build-debug/
 *.bin
 
 # ignore .idea file
-
 .idea/
+
+#ignore MacOS generated file
+.DS_Store
