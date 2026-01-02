@@ -65,6 +65,7 @@ cmake-build-debug/
 *.out
 *.app
 *.bin
+main
 
 # ignore .idea file
 .idea/
