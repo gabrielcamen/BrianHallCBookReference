@@ -5,6 +5,15 @@
 #include <string.h>
 #include <stdbool.h>
 
+struct car {
+    char *name;
+    float price;
+    int speed;
+};
+
+void set_price(struct car *carToUpdate, float newPrice);
+void print_car_specs(struct car *carToPrint);
+void EightStructs(void);
 int my_strlen(char *s);
 void SevenStrings();
 void double_array(int *f, int len);
@@ -120,8 +129,12 @@ int main(void) {
 
     //6. Arrays
     SixArrays();
+    print_spaces();
     //7. Strings
     SevenStrings();
+    print_spaces();
+    //8. Structs
+    EightStructs();
 }
 
 int plus_one(int n) {
@@ -137,12 +150,12 @@ void increment(int *pointer) {
 }
 
 void print_number_and_pointer(int someNumber, int* pointerToSomeNumber, int **pointToSomeNumberByReference) {
-    print_spaces();
+    print_continues();
     printf("The value of someNumber is: %d\n", someNumber);
     printf("The address of pointerToSomeNumber is %p\n",  (void *)pointerToSomeNumber);
     printf("The address of pointToSomeNumberByReference is %p\n",  (void *)pointToSomeNumberByReference);
     printf("The value of pointer to some number:%d\n", *pointerToSomeNumber);
-    print_spaces();
+    print_continues();
 }
 
 void print_spaces() {
@@ -150,10 +163,10 @@ void print_spaces() {
 }
 
 void print_continues() {
-    printf("==============================>\n");
+    printf("======>>=====>>=====>>========>>\n");
 }
 
-void SixArrays() {
+void SixArrays(void) {
     print_spaces();
     printf("6. Arrays\n");
     //size of the array must be fixed.
@@ -225,7 +238,6 @@ void SixArrays() {
     double_array(mv, 5);
     for (int i = 0; i < 5; i++)
         printf("%d\n", mv[i]);
-    print_continues();
 }
 
 void passing_array_to_function_size_of(float f[4]) {
@@ -255,7 +267,7 @@ void double_array(int *f, int len) {
     }
 }
 
-void SevenStrings() {
+void SevenStrings(void) {
     //This form points to wherever that string was placed. Typically, that place is in a land faraway from the rest of your program’s memory – read-only memory – for reasons related to performance & safety.
     char *s = "This is a nice string";
     //But declaring it as an array is different. The compiler doesn’t stow those bytes in another part of town, they’re right down the street. This one is a mutable copy of the string – one we can change at will:
@@ -293,3 +305,43 @@ int my_strlen(char *s) {
     return count;
 }
 
+
+void EightStructs(void) {
+    struct car myCar = { "someName", 25, 150 };
+    print_car_specs(&myCar);
+    print_continues();
+    struct car otherCar = {.speed = 150, .price = 25};
+    set_price(&otherCar, 500);
+    print_car_specs(&otherCar);
+    print_continues();
+    struct car *myCarPointer = &myCar;
+    char *myCarNamePointer = myCar.name;
+    float *myCarPricePointer = &myCar.price;
+    int *myCarSpeedPointer = &myCar.speed;
+    printf("Car struct pointer:  %p\n", (void*) myCarPointer);
+    printf("Name pointer:  %p\n", myCarNamePointer);
+    printf("Price pointer: %p\n", (void*) myCarPricePointer);
+    printf("Speed pointer: %p\n", (void*) myCarSpeedPointer);
+    //this only creates a new struct, all the other values are copied as is including pointers
+    struct car carCopy = myCar;
+    printf("Car struct pointer:  %p\n", (void*) &carCopy);
+    printf("Name pointer:  %p\n", carCopy.name);
+    printf("Price pointer: %p\n", (void*) &carCopy.price);
+    printf("Speed pointer: %p\n", (void*) &carCopy.speed);
+    //for comparing structs the best way to do it is comparing field by field
+    if (myCar.price == carCopy.price && myCar.speed == carCopy.speed && myCar.price == carCopy.price) {
+        printf("Cars are the same\n");
+    }else {
+        printf("Cars are different\n");
+    }
+}
+
+void print_car_specs(struct car *carToPrint) {
+    printf("Name:  %s\n", carToPrint->name);
+    printf("Price: %f\n", carToPrint->price);
+    printf("Speed: %d\n", carToPrint->speed);
+}
+
+void set_price(struct car *carToUpdate, float newPrice) {
+    (*carToUpdate).price = newPrice;
+}
