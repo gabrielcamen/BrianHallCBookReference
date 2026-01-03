@@ -11,6 +11,7 @@ struct car {
     int speed;
 };
 
+void TenTypedef(void);
 void NineFileInputOutput(void);
 void set_price(struct car *carToUpdate, float newPrice);
 void print_car_specs(struct car *carToPrint);
@@ -139,6 +140,9 @@ int main(void) {
     print_spaces();
     //9. File Input/Output
     NineFileInputOutput();
+    print_spaces();
+    //10. typedef: Making New Types
+    TenTypedef();
     print_spaces();
 }
 
@@ -423,4 +427,31 @@ void NineFileInputOutput(void) {
     //00000000  34 12                                             |4.|
     fwrite(&v, sizeof v, 1, fp);
     fclose(fp);
+}
+
+void TenTypedef() {
+    typedef int antelope;
+    antelope number = 5;
+    printf("%d\n", number);
+    print_continues();
+    struct point {
+        float x;
+        float y;
+    };
+    typedef struct point point;
+    point myPoint = {10, 20};
+    printf("X: %f\n", myPoint.x);
+    printf("Y: %f\n", myPoint.y);
+    typedef struct {
+        float x;
+        float y;
+    } point2;
+    point2 myPoint2 = {myPoint.x, myPoint.y};
+    printf("X: %f\n", myPoint2.x);
+    printf("Y: %f\n", myPoint2.y);
+    typedef int *intptr;
+    int a = 10;
+    intptr x = &a;
+    printf("x: %p\n", (void*)x);
+
 }
