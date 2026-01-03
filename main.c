@@ -11,6 +11,7 @@ struct car {
     int speed;
 };
 
+void NineFileInputOutput(void);
 void set_price(struct car *carToUpdate, float newPrice);
 void print_car_specs(struct car *carToPrint);
 void EightStructs(void);
@@ -135,6 +136,10 @@ int main(void) {
     print_spaces();
     //8. Structs
     EightStructs();
+    print_spaces();
+    //9. File Input/Output
+    NineFileInputOutput();
+    print_spaces();
 }
 
 int plus_one(int n) {
@@ -344,4 +349,78 @@ void print_car_specs(struct car *carToPrint) {
 
 void set_price(struct car *carToUpdate, float newPrice) {
     (*carToUpdate).price = newPrice;
+}
+
+void NineFileInputOutput(void) {
+    //FILE* name 	Description
+    //stdin 	        Standard Input, generally the keyboard by default
+    //stdout 	    Standard Output, generally the screen by default
+    //stderr 	    Standard Error, generally the screen by default, as well
+    //these two calls are the same
+    printf("Hello, world!\n");
+    fprintf(stdout, "Hello, world!\n");
+    print_continues();
+    FILE *fp;
+    fp = fopen("hello.txt", "r");
+    int c = fgetc(fp);
+    printf("%d\n", c);
+    printf("%c\n", c);
+    while ((c = fgetc(fp)) != EOF) {
+        printf("%c", c);
+    }
+    printf("\n");
+    fclose(fp);
+    print_continues();
+    char s[1024];
+    int lineCount = 0;
+    fp = fopen("quote.txt", "r");
+    while (fgets(s, 1024, fp) != NULL) {
+        printf("%d: %s", ++lineCount, s);
+    }
+    fclose(fp);
+    printf("\n");
+    print_continues();
+    char name[1024];
+    float length;
+    int mass;
+    fp = fopen("whales.txt", "r");
+    //stdout is alos a *FILE, so you can easily switch between where your output is going
+    //fp = stdout;
+    while (fscanf(fp, "%s %f %d", name, &length, &mass) != EOF) {
+        printf("%s whaled, %d tones, %.1f meters\n", name, mass, length);
+    }
+    fclose(fp);
+    print_continues();
+    printf("Code ran creates output.txt file\n");
+    int x = 32;
+    fp = fopen("output.txt", "w");
+    fputc('B', fp);
+    fputc('\n', fp);
+    fprintf(fp, "x = %d\n", x);
+    fputs("Hello world!\n", fp);
+    fclose(fp);
+    print_continues();
+    unsigned char bytes[6] = {5, 37, 0, 88, 255, 12};
+    fp = fopen("outputBinary.bin", "wb");
+    // In the call to fwrite, the arguments are:
+    // * Pointer to data to write
+    // * Size of each "piece" of data
+    // * Count of each "piece" of data
+    // * FILE*
+    fwrite(bytes, sizeof(char), 6, fp);
+    fclose(fp);
+    fp = fopen("outputBinary.bin", "rb");
+    unsigned char cr;
+    while (fread(&cr, sizeof(char), 1, fp) > 0) {
+        printf("%d\n", cr);
+    }
+    fp = fopen("outputBinaryShort.bin", "wb");
+    unsigned short v = 0x1234;
+    printf("%d\n", v);
+    //This is the output of the line bellow when trying to see the hex of it. Because my machine is little endian that means it stores the least significant bytes in memory first.
+    //This is why data should be serialized to a format and not just stored as binary output because it is not portable
+    //hexdump -C outputBinaryShort.bin
+    //00000000  34 12                                             |4.|
+    fwrite(&v, sizeof v, 1, fp);
+    fclose(fp);
 }

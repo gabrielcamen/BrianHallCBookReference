@@ -72,3 +72,7 @@ main
 
 #ignore MacOS generated file
 .DS_Store
+
+#output file
+output*.txt
+output*.bin
