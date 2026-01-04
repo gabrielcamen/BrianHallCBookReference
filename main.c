@@ -12,6 +12,7 @@ struct car {
     int speed;
 };
 
+void ThirteenScope(void);
 void *aligned_realloc(void *ptr, size_t old_size, size_t alignment, size_t size);
 char *read_line(FILE *fp);
 void TwelveManualMemoryAllocation(void);
@@ -157,6 +158,9 @@ int main(void) {
     print_spaces();
     //12. Manual Memory Allocation
     TwelveManualMemoryAllocation();
+    print_spaces();
+    //13. Scope
+    ThirteenScope();
     print_spaces();
 }
 
@@ -732,5 +736,18 @@ void *aligned_realloc(void *ptr, size_t old_size, size_t alignment, size_t size)
     return new_ptr;
 }
 
-
+void ThirteenScope(void) {
+    int a = 12;
+    {
+       int b = 23;
+    }
+    printf("%d\n", a);
+    //illegal, out of scope
+    //printf("%d\n", b);
+    {
+        int a = 20;
+        //the variable with the name in the inner block will take precedence over the external block
+        printf("%d\n", a);
+    }
+}
 
