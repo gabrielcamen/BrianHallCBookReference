@@ -12,6 +12,9 @@ struct car {
     int speed;
 };
 
+void *aligned_realloc(void *ptr, size_t old_size, size_t alignment, size_t size);
+char *read_line(FILE *fp);
+void TwelveManualMemoryAllocation(void);
 void q_sort_using_pointers(void);
 void *my_memcpy(void *dest, void *src, int byte_count);
 int pointer_strlen(char *s);
@@ -151,6 +154,9 @@ int main(void) {
     print_spaces();
     //11. Pointers II: Arithmetic
     ElevenPointersArithmetic();
+    print_spaces();
+    //12. Manual Memory Allocation
+    TwelveManualMemoryAllocation();
     print_spaces();
 }
 
@@ -599,6 +605,131 @@ void q_sort_using_pointers(void) {
         printf("\n");
     }
     printf("\n");
+}
+
+void TwelveManualMemoryAllocation(void) {
+    int *p = malloc(sizeof(int));
+    if (p == NULL) {
+        printf("malloc failed\n");
+    }else {
+        *p = 12;
+        printf("%d\n", *p);
+        free(p);
+    }
+    print_continues();
+    int *ptr = malloc(sizeof(int) * 10);
+    for (int i = 0; i < 10; i++) {
+        ptr[i] = i * 5;
+    }
+    for (int i = 0; i < 10; i++) {
+        printf("%d", ptr[i]);
+    }
+    printf("\n");
+    free(ptr);
+    print_continues();
+    int *pcalloc = calloc(3, sizeof(int));
+    for (int i = 0; i < 3; i++) {
+        printf("%d\n", pcalloc[i]);
+    }
+    printf("\n");
+    free(pcalloc);
+    int *pmalloc = malloc(sizeof(int) * 3);
+    for (int i = 0; i < 3; i++) {
+        printf("%d\n", pmalloc[i]);
+    }
+    free(pmalloc);
+    print_continues();
+    float *prealloc = malloc(sizeof(float) * 5);
+    for (int i = 0; i < 5; i++) {
+        prealloc[i] = i / 20.0;
+    }
+
+    float *prealloc2 = realloc(prealloc, sizeof(float) * 10);
+    if (prealloc2 == NULL) {
+        free(prealloc);
+    }else {
+        prealloc = prealloc2;
+        for (int i = 5; i < 10; i++)
+            prealloc[i] = 1.0 + (i - 20) / 20.0;
+        for (int i = 0; i < 10; i++)
+            printf("%f\n", prealloc[i]);
+        free(prealloc);
+    }
+    print_continues();
+    FILE *fp = fopen("quote.txt", "r");
+    if (fp != NULL) {
+        char *line = NULL;
+        while (line = read_line(fp), line != NULL) {
+            printf("%s\n", line);
+            free(line);
+        }
+        fclose(fp);
+    }
+    //those 2 are exactly the same
+    char *pz = malloc(5);
+    char *pw= realloc(NULL, 5);
+    free(pz);
+    free(pw);
+}
+
+char *read_line(FILE *fp) {
+    int offset = 0;
+    int bufsize = 4;
+    char *buf;
+    int c;
+
+    buf = malloc(sizeof(char) * bufsize);
+    if (buf == NULL)
+        return nullptr;
+
+    while (c = fgetc(fp), c != EOF && c != '\n') {
+        if (offset == bufsize - 1) {
+            bufsize *= 2;
+            char *newBuf = realloc(buf, sizeof(char) * bufsize);
+            if (newBuf == NULL) {
+                free(buf);
+                return nullptr;
+            }
+            buf = newBuf;
+        }
+
+        buf[offset++] = c;
+    }
+
+    if (c == EOF && offset == 0) {
+        free(buf);
+        return nullptr;
+    }
+
+    if (offset < bufsize - 1) {
+        char *newBuf = realloc(buf, sizeof(char) * offset + 1);
+
+        if (newBuf == NULL) {
+            free(buf);
+            return nullptr;
+        }
+        buf = newBuf;
+    }
+
+    buf[offset] = '\0';
+    return buf;
+}
+
+void *aligned_realloc(void *ptr, size_t old_size, size_t alignment, size_t size)
+{
+    char *new_ptr = aligned_alloc(alignment, size);
+
+    if (new_ptr == NULL)
+        return NULL;
+
+    size_t copy_size = old_size < size? old_size: size;  // get min
+
+    if (ptr != NULL)
+        memcpy(new_ptr, ptr, copy_size);
+
+    free(ptr);
+
+    return new_ptr;
 }
 
 
