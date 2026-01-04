@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 struct car {
     char *name;
@@ -11,6 +12,10 @@ struct car {
     int speed;
 };
 
+void q_sort_using_pointers(void);
+void *my_memcpy(void *dest, void *src, int byte_count);
+int pointer_strlen(char *s);
+void ElevenPointersArithmetic(void);
 void TenTypedef(void);
 void NineFileInputOutput(void);
 void set_price(struct car *carToUpdate, float newPrice);
@@ -143,6 +148,9 @@ int main(void) {
     print_spaces();
     //10. typedef: Making New Types
     TenTypedef();
+    print_spaces();
+    //11. Pointers II: Arithmetic
+    ElevenPointersArithmetic();
     print_spaces();
 }
 
@@ -429,7 +437,7 @@ void NineFileInputOutput(void) {
     fclose(fp);
 }
 
-void TenTypedef() {
+void TenTypedef(void) {
     typedef int antelope;
     antelope number = 5;
     printf("%d\n", number);
@@ -453,5 +461,145 @@ void TenTypedef() {
     int a = 10;
     intptr x = &a;
     printf("x: %p\n", (void*)x);
-
 }
+
+void ElevenPointersArithmetic(void) {
+    int a[6] = {11, 22 ,33, 44, 55, 999};
+    int *p = a;
+    printf("%d\n", *p);
+    p+= 1;
+    printf("%d\n", *p);
+    p+= 3;
+    printf("%d\n", *p);
+    p = a;
+    for (int i = 0; i < 5; i++) {
+        printf("%d\n", *(p + i));
+    }
+    print_continues();
+    p = a;
+    while (*p != 999) {
+        printf("%d\n", *p);
+        p++;
+    }
+    print_continues();
+    char *s = "StringOf14Size";
+    printf("%d\n", pointer_strlen(s));
+    print_continues();
+    //E1[E2] is identical to (*((E1)+(E2)))
+    p = a;
+    for (int i = 0; i < 5; i++)
+        printf("%d,", a[i]);
+    printf("\n");
+    for (int i = 0; i < 5; i++)
+        printf("%d,", p[i]);
+    printf("\n");
+    for (int i = 0; i < 5; i++)
+        printf("%d,", *(a + i));
+    printf("\n");
+    for (int i = 0; i < 5; i++)
+        printf("%d,", *(p + i));
+    printf("\n");
+    for (int i = 0; i < 5; i++)
+        printf("%d,", *(p++));
+    printf("\n");
+    a[1] = 20;
+    for (int i = 0; i < 5; i++)
+        printf("%d,", a[i]);
+    printf("\n");
+    //printf("%d\n", *(a++));    // Moving array variable -ERROR!
+    print_continues();
+    char sw[] = "Antelopes";
+    char *se = "Antelopes";
+    printf("sw length: %d\n", my_strlen(sw));
+    printf("se length: %d\n", my_strlen(se));
+    char ms[] = "Goats";
+    char mse[100];
+    memcpy(mse, ms, strlen(ms) + 1);
+    printf("%s\n", mse);
+    print_continues();
+    int vs[] = {1, 2, 515, 23, 44};
+    int vse[20];
+    memcpy(vse, vs, 3 * sizeof(vs));
+    printf("%d\n", vs[0]);
+    printf("%d\n", vs[1]);
+    printf("%d\n", vs[2]);
+    print_continues();
+    char zw[] = "My nice string";
+    char zwe[100];
+    my_memcpy(zwe, zw, sizeof(zw) + 1);
+    printf("%s\n", zw);
+    printf("%s\n", zwe);
+    print_continues();
+    q_sort_using_pointers();
+}
+
+int pointer_strlen(char *s) {
+    char *current = s;
+    while (*current != '\0') {
+        current++;
+    }
+    return current - s;
+}
+
+void *my_memcpy(void *dest, void *src, int byte_count) {
+    char *d= dest, *s = src;
+
+    while (byte_count--) {
+        *d++ = *s++;
+    }
+
+    return dest;
+}
+
+typedef struct  {
+    char *name;
+    int leg_count;
+} animal;
+
+int compar(const void *elem1, const void *elem2) {
+    const animal *a1 = elem1, *a2 = elem2;
+
+    if (a1->leg_count > a2->leg_count)
+        return 1;
+
+    if (a1->leg_count < a2->leg_count)
+        return -1;
+
+    return 0;
+}
+
+void q_sort_using_pointers(void) {
+    animal a1 ={
+        "Antelopes",
+        4
+    };
+    animal a2 ={
+        "Duck",
+        2
+    };
+    animal a3 ={
+        "Snake",
+        0
+    };
+    animal a4 = {
+        "Dog",
+        4
+    };
+    animal animals[] = {a1, a2, a3, a4};
+    for (int i = 0; i < 4; i++) {
+        printf("%s, ", animals[i].name);
+        printf("%d, ", animals[i].leg_count);
+        printf("\n");
+    }
+    printf("\n");
+    qsort(animals, 4, sizeof(animal), compar);
+    for (int i = 0; i < 4; i++) {
+        printf("%s, ", animals[i].name);
+        printf("%d, ", animals[i].leg_count);
+        printf("\n");
+    }
+    printf("\n");
+}
+
+
+
