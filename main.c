@@ -1,6 +1,8 @@
 //
 // Created by Gabe C on 31.12.2025.
 //
+#include <float.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -12,6 +14,7 @@ struct car {
     int speed;
 };
 
+void FourteenTypes2(void);
 void ThirteenScope(void);
 void *aligned_realloc(void *ptr, size_t old_size, size_t alignment, size_t size);
 char *read_line(FILE *fp);
@@ -162,6 +165,8 @@ int main(void) {
     //13. Scope
     ThirteenScope();
     print_spaces();
+    //14. Types II: Way More Types!
+    FourteenTypes2();
 }
 
 int plus_one(int n) {
@@ -749,5 +754,84 @@ void ThirteenScope(void) {
         //the variable with the name in the inner block will take precedence over the external block
         printf("%d\n", a);
     }
+}
+
+void FourteenTypes2(void){
+    unsigned int a = -5;
+    unsigned int z = 10;
+    //-5 mod UINT_MAX = 4294967291
+    printf("%u\n", a);
+    printf("%u\n", z);
+    long long thisIsLong = 20;
+    long thisIsShorter = 10;
+    short thisIsEvenShorter = 5;
+    printf("%hd\n", thisIsEvenShorter);
+    printf("%ld\n", thisIsShorter);
+    printf("%lld\n", thisIsLong);
+    print_continues();
+    char c = 'B';
+    unsigned char u = c;
+    //actually a string
+    printf("%d\n", c);
+    printf("%d\n", u);
+    //undefined behavior, char should be between 0-255
+    printf("%c\n", -55);
+    print_continues();
+    printf("Char lower bound: %d\n", CHAR_MIN);
+    printf("Char upper bound: %d\n", CHAR_MAX);
+    print_continues();
+    printf("Base of floating numbers: %d\n", FLT_RADIX);
+    print_continues();
+    printf("Number of digits float can store for sure: %d\n", FLT_DIG);
+    printf("Number of digits double can store for sure: %d\n", DBL_DIG);
+    printf("Number of digits long double can store for sure: %d\n", LDBL_DIG);
+    float six = 0.123456f;
+    float seven = 0.1234567f;
+    float eight = 0.12345678f;
+    float nine = 0.123456789f;
+    printf("six digits: %.6f\n", six);
+    printf("seven digits: %.7f\n", seven);
+    printf("eight digits: %.8f\n", eight);
+    printf("After eight it starts going crazy\n");
+    printf("nine digits: %.9f\n", nine);
+    print_continues();
+    float f = 3.14159f;
+    float g = 0.00000265358f;
+    printf("%.5f\n", f);
+    printf("%.11f\n", g);
+    f += g;
+    printf("Adding those becomes incorrect: %.11f\n", f);
+    print_continues();
+    double x = 0.1;
+    double y;
+    printf("Using DBL_DIG (%d digits):\n", DBL_DIG);
+    printf("%.*g\n", DBL_DIG, x);
+    printf("Using DBL_DECIMAL_DIG (%d digits):\n", DBL_DECIMAL_DIG);
+    printf("%.*g\n", DBL_DECIMAL_DIG, x);
+    sscanf("0.10000000000000001", "%lf", &y);
+    printf("Reconstructed y = %.17g\n", y);
+    print_continues();
+    int az = 0x1A2B;
+    printf("%d\n",az);
+    int xz = 0b101010;
+    printf("%d\n", xz);
+    int           xs = 1234;
+    long int      xl = 1234L;
+    long long int xll = 1234LL;
+    unsigned int  xu = 1234U;
+    unsigned long int xul = 1234UL;
+    unsigned long long int xull = 1234ULL;
+    printf("%d sizeof: %zu\n", xs, sizeof(xs));
+    printf("%ld sizeof: %zu\n", xl, sizeof(xl));
+    printf("%lld sizeof: %zu\n", xll, sizeof(xll));
+    printf("%u sizeof: %zu\n", xu, sizeof(xu));
+    printf("%lu sizeof: %zu\n", xul, sizeof(xul));
+    printf("%llu sizeof: %zu\n", xull, sizeof(xull));
+    print_continues();
+    printf("%e\n", 123456.0);
+    print_continues();
+    double xv = 0xa.1p3;
+    printf("%a\n", xv);  // 0x1.42p+6
+    printf("%f\n", xv);  // 80.500000
 }
 
